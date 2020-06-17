@@ -9,6 +9,7 @@ public class State {
 	private int area;
 	private int population;
 	private String neighbors;
+	private double defcon;
 
 	public State(String id, String name, String capital, Double lat, Double lng, int area, int population,
 			String neighbors) {
@@ -21,6 +22,21 @@ public class State {
 		this.area = area;
 		this.population = population;
 		this.neighbors = neighbors;
+		this.defcon = 5;
+	}
+
+	/**
+	 * @return the defcon
+	 */
+	public double getDefcon() {
+		return defcon;
+	}
+
+	/**
+	 * @param d the defcon to set
+	 */
+	public void setDefcon(double d) {
+		this.defcon = d;
 	}
 
 	public String getId() {
@@ -115,6 +131,26 @@ public class State {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public void decrementaDefcon(double valore) {
+		this.defcon = this.defcon-valore;
+		if(this.defcon<1) {
+			this.defcon = 1;
+		}
+		
+	}
+
+	public void incrementaDefcon(double valore) {
+		// TODO Auto-generated method stub
+		this.defcon = this.defcon +valore;
+		if(this.defcon>5) {
+			this.defcon = 5;
+		}
+		
+	}
+	public String stampaDefcon() {
+		return this.name+" DEFCON: "+this.defcon;
 	}
 
 }

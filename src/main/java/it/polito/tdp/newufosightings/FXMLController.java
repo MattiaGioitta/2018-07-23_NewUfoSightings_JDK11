@@ -1,9 +1,12 @@
 package it.polito.tdp.newufosightings;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.newufosightings.model.Model;
+import it.polito.tdp.newufosightings.model.StampaPeso;
+import it.polito.tdp.newufosightings.model.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -33,7 +36,7 @@ public class FXMLController {
     private Button btnSelezionaAnno;
 
     @FXML
-    private ComboBox<?> cmbBoxForma;
+    private ComboBox<String> cmbBoxForma;
 
     @FXML
     private Button btnCreaGrafo;
@@ -49,16 +52,91 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	this.txtResult.clear();
+    	Integer anno; 
+    	try {
+    		anno = Integer.parseInt(this.txtAnno.getText());
+    		if(anno<1910 || anno>2014) {
+    			this.txtResult.setText("Inserisci un anno tra 1910 e 2014");
+        		return;
+    		}
+    		String forma = this.cmbBoxForma.getValue();
+    		if(forma == null) {
+    			this.txtResult.setText("Scegli una forma");
+        		return;
+    		}
+    		this.model.createGraph(forma,anno);
+    		this.txtResult.appendText("Grafo creato\n");
+    		this.txtResult.appendText("#Vertici: "+this.model.nVertici()+"\n");
+    		this.txtResult.appendText("#Archi: "+this.model.nArchi()+"\n");
+    		
+    		List<StampaPeso> lista = this.model.getStampe();
+    		for(StampaPeso s : lista) {
+    			this.txtResult.appendText(s.toString()+"\n");
+    		}
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserisci l'anno nel formato corretto");
+    		return;
+    	}
+    	
 
     }
 
     @FXML
     void doSelezionaAnno(ActionEvent event) {
+    	this.txtResult.clear();
+    	Integer anno; 
+    	try {
+    		anno = Integer.parseInt(this.txtAnno.getText());
+    		if(anno<1910 || anno>2014) {
+    			this.txtResult.setText("Inserisci un anno tra 1910 e 2014");
+        		return;
+    		}
+    		this.cmbBoxForma.getItems().addAll(this.model.getForme(anno));
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserisci l'anno nel formato corretto");
+    		return;
+    	}
 
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	
+    	this.txtResult.clear();
+    	this.model.reset();
+    	Integer T;
+    	Integer alfa;
+    	Integer anno; 
+    	try {
+    		anno = Integer.parseInt(this.txtAnno.getText());
+    		if(anno<1910 || anno>2014) {
+    			this.txtResult.setText("Inserisci un anno tra 1910 e 2014");
+        		return;
+    		}
+    		String forma = this.cmbBoxForma.getValue();
+    		if(forma == null) {
+    			this.txtResult.setText("Scegli una forma");
+        		return;
+    		}
+    		T=Integer.parseInt(this.txtT1.getText());
+    		if(T>365) {
+    			this.txtResult.setText("Inserisci un numero T minore di 365");
+        		return;
+    		}
+    		alfa = Integer.parseInt(this.txtAlfa.getText());
+    		if(alfa<0 || alfa>100) {
+    			this.txtResult.setText("Inserisci un numero alfa tra 0 e 100");
+        		return;
+    		}
+    		this.model.simula(alfa,T,anno,forma);
+    		for(State s : this.model.stati()) {
+    			this.txtResult.appendText(s.stampaDefcon()+"\n");
+    		}
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Inserisci i campi T1 o alfa nel formato corretto");
+    		return;
+    	}
 
     }
 
