@@ -9,6 +9,8 @@ public class State {
 	private int area;
 	private int population;
 	private String neighbors;
+	private int defcon;
+	private int allerteMassime;
 
 	public State(String id, String name, String capital, Double lat, Double lng, int area, int population,
 			String neighbors) {
@@ -21,6 +23,15 @@ public class State {
 		this.area = area;
 		this.population = population;
 		this.neighbors = neighbors;
+		this.defcon = 5;
+		this.allerteMassime = 0;
+	}
+
+	/**
+	 * @return the defcon
+	 */
+	public int getDefcon() {
+		return defcon;
 	}
 
 	public String getId() {
@@ -115,6 +126,27 @@ public class State {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public void decrementaDefcon() {
+		this.defcon--;
+		
+	}
+
+	public void incrementaDefon() {
+		this.defcon++;
+		
+	}
+
+	public void incrementaAllerta() {
+		this.allerteMassime++;	
+	}
+
+	/**
+	 * @return the allerteMassime
+	 */
+	public int getAllerteMassime() {
+		return allerteMassime;
 	}
 
 }

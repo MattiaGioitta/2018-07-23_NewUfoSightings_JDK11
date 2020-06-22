@@ -1,9 +1,12 @@
 package it.polito.tdp.newufosightings;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import it.polito.tdp.newufosightings.model.Model;
+import it.polito.tdp.newufosightings.model.StampaPesoAdiacenti;
+import it.polito.tdp.newufosightings.model.State;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -46,11 +49,67 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	this.txtResult.clear();
+    	Integer xG;
+    	Integer anno;
+    	try {
+    		xG = Integer.parseInt(this.txtxG.getText());
+    		if(xG<1 || xG>180) {
+    			this.txtResult.setText("numero xG deve essere compreso tra 1 e 180!");
+        		return;
+    		}
+    		anno = Integer.parseInt(this.txtAnno.getText());
+    		if(anno<1906 || anno>2014) {
+    			this.txtResult.setText("L'anno deve essere compreso tra 1906 e 2014!");
+        		return;
+    		}
+    		this.model.createGraph(xG,anno);
+    		this.txtResult.appendText("Grafo creato con\n");
+    		this.txtResult.appendText(String.format("#Vertici: %d\n#Archi: %d\n", this.model.nVertici(),this.model.nArchi()));
+    		List<StampaPesoAdiacenti> lista = this.model.getPesoAdiacenti();
+    		for(StampaPesoAdiacenti s : lista) {
+    			this.txtResult.appendText(s.toString()+"\n");
+    		}
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Valori inseriti non corretti nel formato!");
+    		return; 
+    	}
 
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	this.txtResult.clear();
+    	Integer T1;
+    	Integer T2;
+    	Integer xG;
+    	Integer anno;
+    	try {
+    		xG = Integer.parseInt(this.txtxG.getText());
+    		if(xG<1 || xG>180) {
+    			this.txtResult.setText("numero xG deve essere compreso tra 1 e 180!");
+        		return;
+    		}
+    		anno = Integer.parseInt(this.txtAnno.getText());
+    		if(anno<1906 || anno>2014) {
+    			this.txtResult.setText("L'anno deve essere compreso tra 1906 e 2014!");
+        		return;
+    		}
+    		T1 = Integer.parseInt(this.txtT1.getText());
+    		T2 = Integer.parseInt(this.txtT2.getText());
+    		if(T1>365 || T2>365) {
+    			this.txtResult.setText("Inserisci t1 o t2 minori di 365!");
+        		return;
+    		}
+    		this.model.simula(T1,T2,xG,anno);
+    		List<State> stati = this.model.getStati();
+    		for(State s : stati) {
+    			this.txtResult.appendText(s.getName()+" numero allerte massime: "+s.getAllerteMassime()+"\n");
+    		}
+    	}catch(NumberFormatException e) {
+    		this.txtResult.setText("Valori inseriti non corretti nel formato!");
+    		return; 
+    	}
 
     }
 
